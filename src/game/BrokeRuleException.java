@@ -6,6 +6,5 @@ package game;
 public class BrokeRuleException extends Exception {
 	public BrokeRuleException(String violation) {
 		super(violation);
-		System.out.println("wad");
 	}
 }
