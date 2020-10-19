@@ -139,7 +139,7 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 	// Select and display trump suit
 		final Suit trumps = randomEnum(Suit.class);
 		final Actor trumpsActor = new Actor("sprites/"+trumpImage[trumps.ordinal()]);
-	    addActor(trumpsActor, trumpsActorLocation);
+		addActor(trumpsActor, trumpsActorLocation);
 	// End trump suit
 	Hand trick;
 	int winner;
@@ -148,18 +148,18 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 	int nextPlayer = random.nextInt(nbPlayers); // randomly select player to lead for this round
 	for (int i = 0; i < nbStartCards; i++) {
 		trick = new Hand(deck);
-    	selected = null;
+		selected = null;
         if (0 == nextPlayer) {  // Select lead depending on player type
-    		hands[0].setTouchEnabled(true);
-    		setStatus("Player 0 double-click on card to lead.");
-    		while (null == selected) delay(100);
+			hands[0].setTouchEnabled(true);
+			setStatus("Player 0 double-click on card to lead.");
+			while (null == selected) delay(100);
         } else {
-    		setStatusText("Player " + nextPlayer + " thinking...");
+			setStatusText("Player " + nextPlayer + " thinking...");
             delay(thinkingTime);
             selected = randomCard(hands[nextPlayer]);
         }
         // Lead with selected card
-	        trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
+			trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
 			trick.draw();
 			selected.setVerso(false);
 			// No restrictions on the card being lead
@@ -173,17 +173,17 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 		for (int j = 1; j < nbPlayers; j++) {
 			if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
 			selected = null;
-	        if (0 == nextPlayer) {
-	    		hands[0].setTouchEnabled(true);
-	    		setStatus("Player 0 double-click on card to follow.");
-	    		while (null == selected) delay(100);
-	        } else {
-		        setStatusText("Player " + nextPlayer + " thinking...");
-		        delay(thinkingTime);
-		        selected = randomCard(hands[nextPlayer]);
-	        }
+			if (0 == nextPlayer) {
+				hands[0].setTouchEnabled(true);
+				setStatus("Player 0 double-click on card to follow.");
+				while (null == selected) delay(100);
+			} else {
+				setStatusText("Player " + nextPlayer + " thinking...");
+				delay(thinkingTime);
+				selected = randomCard(hands[nextPlayer]);
+			}
 	        // Follow with selected card
-		        trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
+				trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
 				trick.draw();
 				selected.setVerso(false);  // In case it is upside down
 				// Check: Following card must follow suit if possible
@@ -228,20 +228,20 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 }
 
 	public Whist()
-  {
-    super(700, 700, 30);
-    setTitle("Whist (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
-    setStatusText("Initializing...");
-    initScore();
-    Optional<Integer> winner;
-    do { 
-      initRound();
-      winner = playRound();
-    } while (!winner.isPresent());
-    addActor(new Actor("sprites/gameover.gif"), textLocation);
-    setStatusText("Game over. Winner is player: " + winner.get());
-    refresh();
-  }
+	{
+		super(700, 700, 30);
+		setTitle("Whist (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
+		setStatusText("Initializing...");
+		initScore();
+		Optional<Integer> winner;
+		do { 
+			initRound();
+			winner = playRound();
+		} while (!winner.isPresent());
+		addActor(new Actor("sprites/gameover.gif"), textLocation);
+		setStatusText("Game over. Winner is player: " + winner.get());
+		refresh();
+	}
 
 	public static void main(String[] args)
 	{
