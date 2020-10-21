@@ -13,7 +13,7 @@ public class Whist extends CardGame {
 	
 	public enum Suit
 	{
-    	SPADES, HEARTS, DIAMONDS, CLUBS
+		SPADES, HEARTS, DIAMONDS, CLUBS
 	}
 
 	public enum Rank
@@ -159,16 +159,16 @@ private Optional<Integer> playRound() {  // Returns winner, if any
             selected = randomCard(hands[nextPlayer]);
         }
         // Lead with selected card
-			trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
-			trick.draw();
-			selected.setVerso(false);
-			// No restrictions on the card being lead
-			lead = (Suit) selected.getSuit();
-			selected.transfer(trick, true); // transfer to trick (includes graphic effect)
-			winner = nextPlayer;
-			winningCard = selected;
-			System.out.println("New trick: Lead Player = "+nextPlayer+", Lead suit = "+selected.getSuit()+", Trump suit = "+trumps);
-			System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+printHand(hands[nextPlayer].getCardList())+"]");
+		trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
+		trick.draw();
+		selected.setVerso(false);
+		// No restrictions on the card being lead
+		lead = (Suit) selected.getSuit();
+		selected.transfer(trick, true); // transfer to trick (includes graphic effect)
+		winner = nextPlayer;
+		winningCard = selected;
+		System.out.println("New trick: Lead Player = "+nextPlayer+", Lead suit = "+selected.getSuit()+", Trump suit = "+trumps);
+		System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+printHand(hands[nextPlayer].getCardList())+"]");
 		// End Lead
 		for (int j = 1; j < nbPlayers; j++) {
 			if (++nextPlayer >= nbPlayers) nextPlayer = 0;  // From last back to first
@@ -183,34 +183,39 @@ private Optional<Integer> playRound() {  // Returns winner, if any
 				selected = randomCard(hands[nextPlayer]);
 			}
 	        // Follow with selected card
-				trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
-				trick.draw();
-				selected.setVerso(false);  // In case it is upside down
-				// Check: Following card must follow suit if possible
-					if (selected.getSuit() != lead && hands[nextPlayer].getNumberOfCardsWithSuit(lead) > 0) {
-						 // Rule violation
-						String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + selected;
-						 //System.out.println(violation);
-						if (enforceRules) 
-							try {
-								throw(new BrokeRuleException(violation));
-								} catch (BrokeRuleException e) {
-									e.printStackTrace();
-									System.out.println("A cheating player spoiled the game!");
-									System.exit(0);
-								}  
-					}
-				// End Check
-				 selected.transfer(trick, true); // transfer to trick (includes graphic effect)
-				System.out.println("Winning card: "+winningCard.toString());
-				System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+printHand(hands[nextPlayer].getCardList())+"]");
-				 if ( // beat current winner with higher card
-					(selected.getSuit() == winningCard.getSuit() && rankGreater(selected, winningCard)) ||
-					  // trumped when non-trump was winning
-					(selected.getSuit() == trumps && winningCard.getSuit() != trumps)) {
-					winner = nextPlayer;
-					winningCard = selected;
+			trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
+			trick.draw();
+			selected.setVerso(false);  // In case it is upside down
+			// Check: Following card must follow suit if possible
+			if (selected.getSuit() != lead && hands[nextPlayer].getNumberOfCardsWithSuit(lead) > 0) {
+					// Rule violation
+				String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + selected;
+					//System.out.println(violation);
+				if (enforceRules) {
+					new BrokeRuleException(violation).printStackTrace();
+					System.out.println("A cheating player spoiled the game!");
+					System.exit(0);
+					// try {
+					// 	throw(new BrokeRuleException(violation));
+					// } 
+					// catch (BrokeRuleException e) {
+					// 	e.printStackTrace();
+					// 	System.out.println("A cheating player spoiled the game!");
+					// 	System.exit(0);
+					// }
 				}
+			}
+			// End Check
+			selected.transfer(trick, true); // transfer to trick (includes graphic effect)
+			System.out.println("Winning card: "+winningCard.toString());
+			System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+printHand(hands[nextPlayer].getCardList())+"]");
+			if ( // beat current winner with higher card
+				(selected.getSuit() == winningCard.getSuit() && rankGreater(selected, winningCard)) ||
+					// trumped when non-trump was winning
+				(selected.getSuit() == trumps && winningCard.getSuit() != trumps)) {
+				winner = nextPlayer;
+				winningCard = selected;
+			}
 			// End Follow
 		}
 		delay(600);
