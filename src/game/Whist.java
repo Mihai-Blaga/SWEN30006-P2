@@ -7,7 +7,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import static game.utils.*;
+import static game.Utils.*;
 
 @SuppressWarnings("serial")
 public class Whist extends CardGame {

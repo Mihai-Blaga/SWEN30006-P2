@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public final class utils {
+public final class Utils {
     static final Random random = ThreadLocalRandom.current();
     // return random Enum value
 	public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
