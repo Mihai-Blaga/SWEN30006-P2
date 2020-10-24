@@ -4,3 +4,5 @@ Properties:
 The game can be played with up to 4 players. Making this configurable would change too much of the design as it would essentially be a completely different game.
 There are a variety of properties which are understood to be constant throughout any format of the game.
     Look and feel (font, fontsize, interface layout, etc.)
+
+moved methods into utils to cleanup Whist.java
