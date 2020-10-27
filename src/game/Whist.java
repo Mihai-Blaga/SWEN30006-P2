@@ -56,7 +56,6 @@ public class Whist extends CardGame {
 	private final Location textLocation = new Location(350, 450);
 	private final Location hideLocation = new Location(-500, - 500);
 	private final Location trumpsActorLocation = new Location(50, 50);
-	private boolean enforceRules=false;
 
 
 	Font bigFont = new Font("Serif", Font.BOLD, 36);
@@ -135,7 +134,7 @@ public class Whist extends CardGame {
 						// Rule violation
 					String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + selected;
 						//System.out.println(violation);
-					if (enforceRules) {
+					if (config.enforceRules) {
 						new BrokeRuleException(violation).printStackTrace();
 						System.out.println("A cheating player spoiled the game!");
 						System.exit(0);
