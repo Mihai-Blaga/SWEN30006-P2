@@ -21,7 +21,7 @@ public class Whist extends CardGame {
 
 	public enum Rank
 	{
-		// Reverse order of rank importance (see rankGreater() in utils.java)
+		// Reverse order of rank importance (see rankGreater() in Utils.java)
 		// Order of cards is tied to card images
 		ACE, KING, QUEEN, JACK, TEN, NINE, EIGHT, SEVEN, SIX, FIVE, FOUR, THREE, TWO
 	}
