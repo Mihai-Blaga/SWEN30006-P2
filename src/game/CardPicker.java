@@ -1,6 +1,7 @@
 package game;
 
 import ch.aplu.jcardgame.Card;
+import ch.aplu.jcardgame.Hand;
 
 import java.util.ArrayList;
 
@@ -17,10 +18,10 @@ public class CardPicker {
         this.cardSelector = cardSelector;
     }
 
-    public Card pickCard(ArrayList<Card> hand, Whist.Suit lead, Whist.Suit trump) {
-
+    public Card pickCard(Hand hand, Whist.Suit lead, Whist.Suit trump) {
+        ArrayList<Card> handList = hand.getCardList();
         assert (cardSelector != null);
-        hand = cardFilter.filter(hand, lead, trump);
-        return cardSelector.select(hand, lead, trump);
+        handList = cardFilter.filter(handList, lead, trump);
+        return cardSelector.select(handList, lead, trump);
     }
 }
