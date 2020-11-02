@@ -5,6 +5,8 @@ import ch.aplu.jcardgame.Card;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import org.apache.commons.math3.distribution.BinomialDistribution;
+
 public class SmartSelection implements CardSelector {
 
     private static final double THRESHOLD = 0.8;

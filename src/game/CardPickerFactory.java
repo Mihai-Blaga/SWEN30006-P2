@@ -6,6 +6,7 @@ public class CardPickerFactory {
 
         String[] strategy = strat.split(",");
 
+        //setting the filters.
         switch(strategy[0]){
             case "trump":
                 out.addFilters(new NaiveLegal());
@@ -17,6 +18,7 @@ public class CardPickerFactory {
                 break;
         }
 
+        //setting the selectors.
         switch(strategy[1]){
             case "smart":
                 out.setCardSelector(new SmartSelection());
