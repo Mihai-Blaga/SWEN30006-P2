@@ -10,6 +10,15 @@ public class DeckObserver {
     private static List<Card> playedCards = new ArrayList<>();
     private static List<Card> currentTrick = new ArrayList<>();
 
+    private DeckObserver instance = null;
+
+    private DeckObserver() {}
+
+    public DeckObserver getDeckObserver() {
+        if (instance == null) instance = new DeckObserver();
+        return instance;
+    }
+
     //TODO: ADD endTrick and addToTrick methods in Whist.
     public static void endTrick(Card playedCard) {
         playedCards.addAll(currentTrick);
