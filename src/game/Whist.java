@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import static game.Utils.*;
+import static game.CardPickerFactory.*;
 
 @SuppressWarnings("serial")
 public class Whist extends CardGame {
@@ -89,7 +90,7 @@ public class Whist extends CardGame {
 		for (int i = 0; i < config.nbStartCards; i++) {
 			trick = new Hand(deck);
 			selected = null;
-			if (0 == nextPlayer) {  // Select lead depending on player type
+			if (config.playerLogic[nextPlayer].contains("human")) {  // Select lead depending on player type
 				players[0].hand.setTouchEnabled(true);
 				setStatusText("Player 0 double-click on card to lead.");
 				while (null == selected) delay(100);
@@ -115,7 +116,7 @@ public class Whist extends CardGame {
 			for (int j = 1; j < config.nbPlayers; j++) {
 				if (++nextPlayer >= config.nbPlayers) nextPlayer = 0;  // From last back to first
 				selected = null;
-				if (0 == nextPlayer) {
+				if (config.playerLogic[nextPlayer].contains("human")) {
 					players[0].hand.setTouchEnabled(true);
 					setStatusText("Player 0 double-click on card to follow.");
 					while (null == selected) delay(100);
@@ -183,6 +184,9 @@ public class Whist extends CardGame {
 		players = new Player[config.nbPlayers];
 		for (int i = 0; i < config.nbPlayers; i++) {
 			players[i] = new Player(deck);
+
+			//set the CardPicker of each player.
+			players[i].setStrategy(getStrategy(config.playerLogic[i]));
 		}
 		initScore();
 		playGame();

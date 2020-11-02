@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class CardPicker {
 
-    private CardFilterer cardFilter = new CardFilterer();
+    private BaseFilter cardFilter = new BaseFilter();
     private CardSelector cardSelector = null;
 
     public void addFilters(CardFilter newFilter) {

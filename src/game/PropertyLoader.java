@@ -2,35 +2,18 @@ package game;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Properties;
 
 public class PropertyLoader {
     public static int seed;
     public static int nbPlayers;
     
-    public class Player {
-        public String filter;
-        public String selection;
-
-        public Player(){
-            filter = "none";
-            selection = "random";
-        }
-
-        public Player(String filter, String selection){
-            this.filter = filter;
-            this.selection = selection;
-        }
-
-    }
-
-    public static ArrayList<Player> players;
-    
     public static int nbStartCards;
     public static int winningScore;
     public static boolean enforceRules;
     public static int thinkingTime;
+
+    public static String[] playerLogic;
 
     Properties prop;
 
@@ -65,6 +48,7 @@ public class PropertyLoader {
             int i = 0;
             String[] fileNames = {"whist.properties", "legal.properties", "smart.properties"};
 
+            //parsing through file and loading the file in priority with enable flag.
             inStream = new FileReader(fileNames[i++]);
             whistProperties.load(inStream);
 
@@ -80,6 +64,7 @@ public class PropertyLoader {
             }
         }
 
+        //Loading properties
         seed = Integer.parseInt(whistProperties.getProperty("Seed"));
         System.out.println("Seed: " + seed);
 
@@ -100,15 +85,11 @@ public class PropertyLoader {
         thinkingTime = Integer.parseInt(whistProperties.getProperty("thinkingTime"));
         System.out.println("Time to think: " + thinkingTime);
 
-        players = new ArrayList<>();
+        playerLogic = new String[nbPlayers];
+
+        //defining the strategies used by each player.
         for (int i = 0; i < nbPlayers; i++){
-            String[] playerLogic = whistProperties.getProperty(String.format("player_%d", i + 1)).split(",",2);
-
-            Player p = this.new Player(playerLogic[0], playerLogic[1]);
-
-            players.add(p);
-
-            System.out.printf("Player %d has %s filter and %s selector\n", i, p.filter, p.selection);
+            playerLogic[i] = whistProperties.getProperty(String.format("player_%d", i + 1));
         }
 
         return whistProperties;

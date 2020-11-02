@@ -21,4 +21,8 @@ public class Player {
     public Card playCard(Suit lead, Suit trump) {
         return selector.pickCard(hand, lead, trump);
     }
+
+    public void setStrategy(CardPicker strat){
+        selector = strat;
+    }
 }
