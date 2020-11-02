@@ -5,15 +5,15 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class PropertyLoader {
-    public static int seed;
-    public static int nbPlayers;
+    public int seed;
+    public int nbPlayers;
     
-    public static int nbStartCards;
-    public static int winningScore;
-    public static boolean enforceRules;
-    public static int thinkingTime;
+    public int nbStartCards;
+    public int winningScore;
+    public boolean enforceRules;
+    public int thinkingTime;
 
-    public static String[] playerLogic;
+    public String[] playerLogic;
 
     Properties prop;
 

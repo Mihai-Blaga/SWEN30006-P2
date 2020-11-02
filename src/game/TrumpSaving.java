@@ -11,7 +11,7 @@ public class TrumpSaving implements CardFilter {
         ArrayList<Card> leads = new ArrayList<>();
         ArrayList<Card> trumps = new ArrayList<>();
         for (Card card: hand) {
-            if (card.getSuit() == lead)
+            if (card.getSuit() == lead || lead == null)
                 leads.add(card);
             else if (card.getSuit() == trump)
                 trumps.add(card);
