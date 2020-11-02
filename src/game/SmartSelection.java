@@ -68,7 +68,7 @@ public class SmartSelection implements CardSelector {
     private boolean canWin(Card card, Whist.Suit trump) {
         boolean cardIsTrump = card.getSuit() == trump;
 
-        for (Card playedCard: DeckObserver.getCurrentTrick()) {
+        for (Card playedCard: DeckObserver.getDeckObserver().getCurrentTrick()) {
             if (playedCard.getRank() == trump && !cardIsTrump)
                 return false;
             //TODO: double check logic (Note: card will always be either lead or trump)
@@ -87,7 +87,7 @@ public class SmartSelection implements CardSelector {
             // Only iterate for ranks greater than you, unless trump...
             if (suit == card.getSuit() && rank == card.getRank()) // Keep going for trump cards.
                 break;
-            if (!DeckObserver.isPlayed(rank, suit))
+            if (!DeckObserver.getDeckObserver().isPlayed(rank, suit))
                 numCardsGreater++;
         }
         return numCardsGreater;

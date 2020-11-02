@@ -7,32 +7,32 @@ import java.util.List;
 
 public class DeckObserver {
 
-    private static List<Card> playedCards = new ArrayList<>();
-    private static List<Card> currentTrick = new ArrayList<>();
+    private List<Card> playedCards = new ArrayList<>();
+    private List<Card> currentTrick = new ArrayList<>();
 
-    private DeckObserver instance = null;
+    private static DeckObserver instance = null;
 
     private DeckObserver() {}
 
-    public DeckObserver getDeckObserver() {
+    public static DeckObserver getDeckObserver() {
         if (instance == null) instance = new DeckObserver();
         return instance;
     }
 
     //TODO: ADD endTrick and addToTrick methods in Whist.
-    public static void endTrick(Card playedCard) {
+    public  void endTrick(Card playedCard) {
         playedCards.addAll(currentTrick);
     }
 
-    public static void addCardToTrick(Card card) {
+    public  void addCardToTrick(Card card) {
         currentTrick.add(card);
     }
 
-    public static boolean isPlayed(Card card) {
+    public  boolean isPlayed(Card card) {
         return playedCards.contains(card);
     }
 
-    public static boolean isPlayed(Whist.Rank rank, Whist.Suit suit) {
+    public  boolean isPlayed(Whist.Rank rank, Whist.Suit suit) {
         for (Card playedCard: playedCards)
             if (playedCard.getRank().equals(rank) &&
                     playedCard.getSuit().equals(suit))
@@ -40,7 +40,7 @@ public class DeckObserver {
         return false;
     }
 
-    public static List<Card> getCurrentTrick() {
+    public  List<Card> getCurrentTrick() {
         return currentTrick;
     }
 }
