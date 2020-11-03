@@ -84,12 +84,12 @@ public class Whist extends CardGame {
 		Hand trick;
 		Suit lead;
 		//set these to meaningless values since java doesn't believe they are intialised always :/
-		int winner =-1;
-		Card winningCard =null;
+		int winner = -1;
+		Card winningCard = null;
 
 		int nextPlayer = random.nextInt(config.nbPlayers); // randomly select player to lead for this round
 		for (int i = 0; i < config.nbStartCards; i++) {
-			//Setup round
+			//Setup trick
 			trick = new Hand(deck);
 			lead = null;
 			for (int j = 0; j < config.nbPlayers; j++) {
@@ -116,9 +116,9 @@ public class Whist extends CardGame {
 				}
 				// Check: Following card must follow suit if possible
 				else if (selected.getSuit() != lead && players[nextPlayer].hand.getNumberOfCardsWithSuit(lead) > 0) {
-						// Rule violation
+					// Rule violation
 					String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + selected;
-						//System.out.println(violation);
+					setStatusText(violation);
 					if (config.enforceRules) {
 						new BrokeRuleException(violation).printStackTrace();
 						System.out.println("A cheating player spoiled the game!");
