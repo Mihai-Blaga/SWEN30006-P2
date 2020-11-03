@@ -5,7 +5,6 @@ import ch.aplu.jcardgame.Card;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import ch.aplu.jcardgame.Hand;
 import org.apache.commons.math3.distribution.BinomialDistribution;
 
 public class SmartSelection extends SingleResultFilter {
@@ -65,9 +64,8 @@ public class SmartSelection extends SingleResultFilter {
 
         if (card.getSuit() != trump) // Add all trump cards that can beat current card
             numCards += numCardsGreater(hand, card, trump);
-
+        //TODO:deal with static error by increasing coupling or making whist a singleton
         //Bi(numCards, (1 - (DeckObserver.getCurrentTrick().size() + 1)/ tot_players))
-        //TODO:create Whist.getNumPlayers()
         BinomialDistribution distribution = new BinomialDistribution(numCards,
                 1 - ((double)DeckObserver.getDeckObserver().getCurrentTrick().size()/(Whist.getNumPlayers()  - 1.0)));
 //        System.out.println(card.toString() + " " + distribution.cumulativeProbability(0) +  " "
