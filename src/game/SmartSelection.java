@@ -8,7 +8,11 @@ import java.util.Hashtable;
 import ch.aplu.jcardgame.Hand;
 import org.apache.commons.math3.distribution.BinomialDistribution;
 
-public class SmartSelection implements CardSelector {
+public class SmartSelection extends SingleResultFilter {
+
+    public SmartSelection(CardFilter f) {
+        super(f);
+    }
 
     private static final double THRESHOLD = 0.8;
     Hashtable<Card, Double> hashtable = new Hashtable<>();
@@ -63,6 +67,7 @@ public class SmartSelection implements CardSelector {
             numCards += numCardsGreater(hand, card, trump);
 
         //Bi(numCards, (1 - (DeckObserver.getCurrentTrick().size() + 1)/ tot_players))
+        //TODO:create Whist.getNumPlayers()
         BinomialDistribution distribution = new BinomialDistribution(numCards,
                 1 - ((double)DeckObserver.getDeckObserver().getCurrentTrick().size()/(Whist.getNumPlayers()  - 1.0)));
 //        System.out.println(card.toString() + " " + distribution.cumulativeProbability(0) +  " "
