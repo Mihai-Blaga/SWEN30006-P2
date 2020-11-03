@@ -88,37 +88,14 @@ public class Whist extends CardGame {
 
 		int nextPlayer = random.nextInt(config.nbPlayers); // randomly select player to lead for this round
 		for (int i = 0; i < config.nbStartCards; i++) {
+			//Setup round
 			trick = new Hand(deck);
-			selected = null;
-			if (config.playerLogic[nextPlayer].contains("human")) {  // Select lead depending on player type
-				players[0].hand.setTouchEnabled(true);
-				setStatusText("Player 0 double-click on card to lead.");
-				while (null == selected) delay(100);
-			} else {
-				setStatusText("Player " + nextPlayer + " thinking...");
-				delay(config.thinkingTime);
-				selected = players[nextPlayer].playCard(null, trumps);
-			}
-
-			// Lead with selected card
-			trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
-			trick.draw();
-			selected.setVerso(false);
-			// No restrictions on the card being lead
-			lead = (Suit) selected.getSuit();
-			selected.transfer(trick, true); // transfer to trick (includes graphic effect)
-			winner = nextPlayer;
-			winningCard = selected;
-			System.out.println("New trick: Lead Player = "+nextPlayer+", Lead suit = "+selected.getSuit()+", Trump suit = "+trumps);
-			System.out.println("Player "+nextPlayer+" play: "+selected.toString()+" from ["+handToString(players[nextPlayer].hand)+"]");
-			// End Lead
-
-			for (int j = 1; j < config.nbPlayers; j++) {
-				if (++nextPlayer >= config.nbPlayers) nextPlayer = 0;  // From last back to first
+			lead = null;
+			for (int j = 0; j < config.nbPlayers; j++) {
 				selected = null;
-				if (config.playerLogic[nextPlayer].contains("human")) {
-					players[0].hand.setTouchEnabled(true);
-					setStatusText("Player 0 double-click on card to follow.");
+				if (players[nextPlayer].isHuman) {
+					players[nextPlayer].hand.setTouchEnabled(true);
+					setStatusText("Player " + nextPlayer + " double-click on card to follow.");
 					while (null == selected) delay(100);
 				} else {
 					setStatusText("Player " + nextPlayer + " thinking...");
@@ -129,8 +106,15 @@ public class Whist extends CardGame {
 				trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
 				trick.draw();
 				selected.setVerso(false);  // In case it is upside down
+				//Set lead
+				if (j == 0) {
+					lead = (Suit) selected.getSuit();
+					winner = nextPlayer;
+					winningCard = selected;
+					System.out.println("New trick: Lead Player = "+nextPlayer+", Lead suit = "+selected.getSuit()+", Trump suit = "+trumps);
+				}
 				// Check: Following card must follow suit if possible
-				if (selected.getSuit() != lead && players[nextPlayer].hand.getNumberOfCardsWithSuit(lead) > 0) {
+				else if (selected.getSuit() != lead && players[nextPlayer].hand.getNumberOfCardsWithSuit(lead) > 0) {
 						// Rule violation
 					String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + selected;
 						//System.out.println(violation);
@@ -160,6 +144,7 @@ public class Whist extends CardGame {
 					winningCard = selected;
 				}
 				// End Follow
+				if (++nextPlayer >= config.nbPlayers) nextPlayer = 0;  // From last back to first
 			}
 			//Win Round
 			delay(600);
@@ -184,9 +169,9 @@ public class Whist extends CardGame {
 		players = new Player[config.nbPlayers];
 		for (int i = 0; i < config.nbPlayers; i++) {
 			players[i] = new Player(deck);
-
 			//set the CardPicker of each player.
 			players[i].setStrategy(getStrategy(config.playerLogic[i]));
+			players[i].isHuman = config.playerLogic[i].contains("human");
 		}
 		initScore();
 		playGame();

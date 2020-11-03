@@ -7,8 +7,8 @@ import ch.aplu.jcardgame.Card;
 import game.Whist.Suit;
 
 public class Player {
-    //TODO:use is bot
-    public Boolean isBot;
+    //TODO:use isHuman
+    public Boolean isHuman;
     public int score;
     public Hand hand;
     private SingleResultFilter selector; 
