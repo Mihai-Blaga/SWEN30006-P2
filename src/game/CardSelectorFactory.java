@@ -1,6 +1,7 @@
 package game;
+import game.filters.*;
 
-public class CardPickerFactory {
+public class CardSelectorFactory {
     public static SingleResultFilter getStrategy(String strat){
         SingleResultFilter out;
         BaseFilter filter = new BaseFilter();

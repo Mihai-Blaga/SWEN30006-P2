@@ -8,7 +8,7 @@ import java.awt.Font;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import static game.Utils.*;
-import static game.CardPickerFactory.*;
+import static game.CardSelectorFactory.*;
 
 @SuppressWarnings("serial")
 public class Whist extends CardGame {

@@ -5,6 +5,7 @@ import ch.aplu.jcardgame.Hand;
 import ch.aplu.jcardgame.Card;
 
 import game.Whist.Suit;
+import game.filters.SingleResultFilter;
 
 public class Player {
     //TODO:use isHuman

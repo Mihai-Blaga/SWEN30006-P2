@@ -1,8 +1,9 @@
-package game;
+package game.filters;
 
 import ch.aplu.jcardgame.Card;
 
 import java.util.ArrayList;
+import game.Whist.Suit;
 
 public class BaseFilter implements CardFilter {
 
@@ -17,7 +18,7 @@ public class BaseFilter implements CardFilter {
     }
 
     @Override
-    public ArrayList<Card> filter(ArrayList<Card> hand, Whist.Suit lead, Whist.Suit trump) {
+    public ArrayList<Card> filter(ArrayList<Card> hand, Suit lead, Suit trump) {
         ArrayList<Card> temp;
         // TODO: Importance of order of Filtering
         for (CardFilter cardFilter: filters) {
