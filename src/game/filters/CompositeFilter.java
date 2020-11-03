@@ -5,7 +5,7 @@ import ch.aplu.jcardgame.Card;
 import java.util.ArrayList;
 import game.Whist.Suit;
 
-public class BaseFilter implements CardFilter {
+public class CompositeFilter implements CardFilter {
 
     private ArrayList<CardFilter> filters = new ArrayList<>();
 

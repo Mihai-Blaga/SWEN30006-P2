@@ -4,7 +4,7 @@ import game.filters.*;
 public class CardSelectorFactory {
     public static SingleResultFilter getStrategy(String strat){
         SingleResultFilter out;
-        BaseFilter filter = new BaseFilter();
+        CompositeFilter filter = new CompositeFilter();
         String[] strategy = strat.split(",");
 
         //setting the filters.
