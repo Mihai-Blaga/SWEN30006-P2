@@ -242,10 +242,6 @@ public class Whist extends CardGame {
     new Whist();
 	}
 
-//	public int getNumPlayers() {
-//		return config.nbPlayers;
-//	}
-
 	public static int getNumPlayers(){
 		return numPlayers;
 	}
