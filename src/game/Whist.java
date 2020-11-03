@@ -39,6 +39,7 @@ public class Whist extends CardGame {
 	private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
 	private Player[] players;
 	private static int numPlayers = 0;
+	private static DeckObserver deckObserver;
 
 	private final Location[] handLocations = {
 		new Location(350, 625),
@@ -107,6 +108,7 @@ public class Whist extends CardGame {
 					selected = players[nextPlayer].playCard(lead, trumps);
 				}
 				// Follow with selected card
+				deckObserver.addCardToTrick(selected);
 				trick.setView(this, new RowLayout(trickLocation, (trick.getNumberOfCards()+2)*trickWidth));
 				trick.draw();
 				selected.setVerso(false);  // In case it is upside down
@@ -151,6 +153,7 @@ public class Whist extends CardGame {
 				if (++nextPlayer >= config.nbPlayers) nextPlayer = 0;  // From last back to first
 			}
 			//Win Round
+			deckObserver.endTrick();
 			delay(600);
 			trick.setView(this, new RowLayout(hideLocation, 0));
 			trick.draw();		
@@ -174,6 +177,7 @@ public class Whist extends CardGame {
 		setStatusText("Initializing...");
 		config = new PropertyLoader();
 		numPlayers = config.nbPlayers;
+		deckObserver  = DeckObserver.getDeckObserver();
 		players = new Player[config.nbPlayers];
 		for (int i = 0; i < config.nbPlayers; i++) {
 			players[i] = new Player(deck);
