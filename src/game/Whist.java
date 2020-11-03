@@ -82,9 +82,10 @@ public class Whist extends CardGame {
 		// End trump suit
 
 		Hand trick;
-		int winner;
-		Card winningCard;
 		Suit lead;
+		//set these to meaningless values since java doesn't believe they are intialised always :/
+		int winner =-1;
+		Card winningCard =null;
 
 		int nextPlayer = random.nextInt(config.nbPlayers); // randomly select player to lead for this round
 		for (int i = 0; i < config.nbStartCards; i++) {
@@ -155,7 +156,10 @@ public class Whist extends CardGame {
 			setStatusText("Player " + nextPlayer + " wins trick.");
 			players[nextPlayer].score++;
 			updateScoreGraphics(nextPlayer);
-			if (config.winningScore == players[nextPlayer].score) return Optional.of(nextPlayer);
+			if (config.winningScore == players[nextPlayer].score) {
+				removeActor(trumpsActor);
+				return Optional.of(nextPlayer);
+			}
 		}
 		removeActor(trumpsActor);
 		return Optional.empty();
