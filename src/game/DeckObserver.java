@@ -20,8 +20,9 @@ public class DeckObserver {
     }
 
     //TODO: ADD endTrick and addToTrick methods in Whist.
-    public  void endTrick(Card playedCard) {
+    public  void endTrick() {
         playedCards.addAll(currentTrick);
+        currentTrick.clear();
     }
 
     public  void addCardToTrick(Card card) {

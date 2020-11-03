@@ -5,6 +5,7 @@ import ch.aplu.jcardgame.Card;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import ch.aplu.jcardgame.Hand;
 import org.apache.commons.math3.distribution.BinomialDistribution;
 
 public class SmartSelection implements CardSelector {
@@ -29,7 +30,7 @@ public class SmartSelection implements CardSelector {
             //TODO: Revisit the Prioritised saving of trump cards
             if (hashtable.get(card) >= THRESHOLD &&
                     !Utils.rankGreater(card, minOverThreshold)) {
-                if (card.getSuit() == lead || card.getSuit() == minOverThreshold.getSuit())
+                if (card.getSuit() != trump || card.getSuit() == minOverThreshold.getSuit())
                     minOverThreshold = card;
             }
         }
@@ -42,27 +43,31 @@ public class SmartSelection implements CardSelector {
                                                            Whist.Suit trump) {
         hashtable.clear();
         for (Card card: hand) {
-            hashtable.put(card, getProbabilities(card, lead, trump));
+            hashtable.put(card, getProbabilities(hand, card, lead, trump));
         }
     }
 
-    private double getProbabilities(Card card, Whist.Suit lead, Whist.Suit trump) {
+    private double getProbabilities(ArrayList<Card> hand, Card card, Whist.Suit lead, Whist.Suit trump) {
 
         //TODO: getSuit() returns type Enum and not Suit.
         // Is comparison still valid? Try .equals maybe?
-        if (card.getSuit() != lead && card.getSuit() != trump) return 0;
+        if ((lead != null && card.getSuit() != lead) && card.getSuit() != trump) return 0;
         if (!canWin(card, trump)) return 0;
 
         int numCards = 0;
 
         // Add all cards that can beat current card
-        numCards += numCardsGreater(card, (Whist.Suit) card.getSuit());
+        numCards += numCardsGreater(hand, card, (Whist.Suit) card.getSuit());
 
         if (card.getSuit() != trump) // Add all trump cards that can beat current card
-            numCards += numCardsGreater(card, trump);
+            numCards += numCardsGreater(hand, card, trump);
 
         //Bi(numCards, (1 - (DeckObserver.getCurrentTrick().size() + 1)/ tot_players))
-        return numCards;  //TODO: Change to cdf (pdf? because we only doing F(0)) of ^
+        BinomialDistribution distribution = new BinomialDistribution(numCards,
+                1 - ((double)DeckObserver.getDeckObserver().getCurrentTrick().size()/(Whist.getNumPlayers()  - 1.0)));
+//        System.out.println(card.toString() + " " + distribution.cumulativeProbability(0) +  " "
+//                + numCards + " "  + distribution.getProbabilityOfSuccess());
+        return distribution.cumulativeProbability(0);
     }
 
     private boolean canWin(Card card, Whist.Suit trump) {
@@ -79,7 +84,7 @@ public class SmartSelection implements CardSelector {
         return true;
     }
     
-    private int numCardsGreater(Card card, Whist.Suit suit) {
+    private int numCardsGreater(ArrayList<Card> hand, Card card, Whist.Suit suit) {
         int numCardsGreater = 0;
         for (Whist.Rank rank: Whist.Rank.values()) {
             //TODO: Double check Whist.Rank.values() gives values in order.
@@ -87,9 +92,18 @@ public class SmartSelection implements CardSelector {
             // Only iterate for ranks greater than you, unless trump...
             if (suit == card.getSuit() && rank == card.getRank()) // Keep going for trump cards.
                 break;
-            if (!DeckObserver.getDeckObserver().isPlayed(rank, suit))
+            if (!DeckObserver.getDeckObserver().isPlayed(rank, suit)
+                    && !contains(hand, rank, suit)) {
                 numCardsGreater++;
+            }
         }
         return numCardsGreater;
+    }
+
+    private boolean contains(ArrayList<Card> hand, Whist.Rank rank, Whist.Suit suit) {
+        for (Card card: hand)
+            if (card.getRank() == rank && card.getSuit() == suit)
+                return true;
+        return false;
     }
 }
