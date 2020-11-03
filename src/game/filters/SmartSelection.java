@@ -72,7 +72,7 @@ public class SmartSelection extends SingleResultFilter {
         //TODO:deal with static error by increasing coupling or making whist a singleton
         //Bi(numCards, (1 - (DeckObserver.getCurrentTrick().size() + 1)/ tot_players))
         BinomialDistribution distribution = new BinomialDistribution(numCards,
-                1 - ((double)DeckObserver.getDeckObserver().getCurrentTrick().size()/(Whist.getNumPlayers()  - 1.0)));
+                1 - ((double)DeckObserver.getDeckObserver().getCurrentTrick().size()/(game.Whist.getNumPlayers()  - 1.0)));
 //        System.out.println(card.toString() + " " + distribution.cumulativeProbability(0) +  " "
 //                + numCards + " "  + distribution.getProbabilityOfSuccess());
         return distribution.cumulativeProbability(0);

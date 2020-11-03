@@ -38,6 +38,8 @@ public class Whist extends CardGame {
 
 	private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
 	private Player[] players;
+	private static int numPlayers = 0;
+
 	private final Location[] handLocations = {
 		new Location(350, 625),
 		new Location(75, 350),
@@ -52,6 +54,7 @@ public class Whist extends CardGame {
 		new Location(575, 25),
 		new Location(650, 575)
 	};
+
 	private final Location trickLocation = new Location(350, 350);
 	private final Location textLocation = new Location(350, 450);
 	private final Location hideLocation = new Location(-500, -500);
@@ -83,7 +86,7 @@ public class Whist extends CardGame {
 
 		Hand trick;
 		Suit lead;
-		//set these to meaningless values since java doesn't believe they are intialised always :/
+		//set these to meaningless values since java doesn't believe they are initialised always :/
 		int winner = -1;
 		Card winningCard = null;
 
@@ -170,6 +173,7 @@ public class Whist extends CardGame {
 		setTitle("Whist (V" + version + ") Constructed for UofM SWEN30006 with JGameGrid (www.aplu.ch)");
 		setStatusText("Initializing...");
 		config = new PropertyLoader();
+		numPlayers = config.nbPlayers;
 		players = new Player[config.nbPlayers];
 		for (int i = 0; i < config.nbPlayers; i++) {
 			players[i] = new Player(deck);
@@ -234,8 +238,11 @@ public class Whist extends CardGame {
     new Whist();
 	}
 
-	public int getNumPlayers() {
-		return config.nbPlayers;
-	}
+//	public int getNumPlayers() {
+//		return config.nbPlayers;
+//	}
 
+	public static int getNumPlayers(){
+		return numPlayers;
+	}
 }
