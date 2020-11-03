@@ -57,9 +57,8 @@ public class SmartSelection extends SingleResultFilter {
 
     private double getProbabilities(ArrayList<Card> hand, Card card, Suit lead, Suit trump) {
 
-        //TODO: getSuit() returns type Enum and not Suit.
-        // Is comparison still valid? Try .equals maybe?
-        if ((lead != null && card.getSuit() != lead) && card.getSuit() != trump) return 0;
+        
+        if (!(lead == null || card.getSuit() == lead || card.getSuit() == trump)) return 0;
         if (!canWin(card, trump)) return 0;
 
         int numCards = 0;
@@ -69,12 +68,11 @@ public class SmartSelection extends SingleResultFilter {
 
         if (card.getSuit() != trump) // Add all trump cards that can beat current card
             numCards += numCardsGreater(hand, card, trump);
-        //TODO:deal with static error by increasing coupling or making whist a singleton
         //Bi(numCards, (1 - (DeckObserver.getCurrentTrick().size() + 1)/ tot_players))
         BinomialDistribution distribution = new BinomialDistribution(numCards,
                 1 - ((double)DeckObserver.getDeckObserver().getCurrentTrick().size()/(game.Whist.getNumPlayers()  - 1.0)));
-//        System.out.println(card.toString() + " " + distribution.cumulativeProbability(0) +  " "
-//                + numCards + " "  + distribution.getProbabilityOfSuccess());
+       System.out.println(card.toString() + " " + distribution.cumulativeProbability(0) +  " "
+               + numCards + " "  + distribution.getProbabilityOfSuccess());
         return distribution.cumulativeProbability(0);
     }
 
@@ -82,9 +80,8 @@ public class SmartSelection extends SingleResultFilter {
         boolean cardIsTrump = card.getSuit() == trump;
 
         for (Card playedCard: DeckObserver.getDeckObserver().getCurrentTrick()) {
-            if (playedCard.getRank() == trump && !cardIsTrump)
+            if (playedCard.getSuit() == trump && !cardIsTrump)
                 return false;
-            //TODO: double check logic (Note: card will always be either lead or trump)
             if (playedCard.getSuit() == card.getSuit()
                     && rankGreater(playedCard, card))
                 return false;
@@ -92,11 +89,10 @@ public class SmartSelection extends SingleResultFilter {
         return true;
     }
     
+    //TODO:Double check this logic, what is suit meant to represent? is it the trump suit?
     private int numCardsGreater(ArrayList<Card> hand, Card card, Suit suit) {
         int numCardsGreater = 0;
         for (Rank rank: Rank.values()) {
-            //TODO: Double check Whist.Rank.values() gives values in order.
-
             // Only iterate for ranks greater than you, unless trump...
             if (suit == card.getSuit() && rank == card.getRank()) // Keep going for trump cards.
                 break;

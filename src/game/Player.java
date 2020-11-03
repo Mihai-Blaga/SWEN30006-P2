@@ -8,7 +8,6 @@ import game.Whist.Suit;
 import game.filters.SingleResultFilter;
 
 public class Player {
-    //TODO:use isHuman
     public Boolean isHuman;
     public int score;
     public Hand hand;

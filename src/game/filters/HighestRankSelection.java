@@ -15,7 +15,7 @@ public class HighestRankSelection extends SingleResultFilter {
     public Card select(ArrayList<Card> hand, Suit lead, Suit trump) {
         Card highest = hand.get(0);
         for (Card card: hand)
-            if (rankGreater(highest,card)) //TODO: check logic
+            if (rankGreater(card,highest))
                 highest = card;
         return highest;
     }

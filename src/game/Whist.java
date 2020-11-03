@@ -73,7 +73,7 @@ public class Whist extends CardGame {
 
 	private Card selected;
 	
-	//TODO abstract away some of the code in this method to others bc its a chonky boi
+	//TODO abstract away some more of the code?
 	/**
 	 * plays a round
 	 * @return the Winner number if there is one
@@ -117,13 +117,12 @@ public class Whist extends CardGame {
 					lead = (Suit) selected.getSuit();
 					winner = nextPlayer;
 					winningCard = selected;
-					System.out.println("New trick: Lead Player = "+nextPlayer+", Lead suit = "+selected.getSuit()+", Trump suit = "+trumps);
+					System.out.println("New trick: Lead Player = " + nextPlayer + ", Lead suit = "+selected.getSuit()+", Trump suit = "+trumps);
 				}
 				// Check: Following card must follow suit if possible
 				else if (selected.getSuit() != lead && players[nextPlayer].hand.getNumberOfCardsWithSuit(lead) > 0) {
 					// Rule violation
 					String violation = "Follow rule broken by player " + nextPlayer + " attempting to play " + selected;
-					setStatusText(violation);
 					if (config.enforceRules) {
 						new BrokeRuleException(violation).printStackTrace();
 						System.out.println("A cheating player spoiled the game!");
@@ -162,10 +161,7 @@ public class Whist extends CardGame {
 			setStatusText("Player " + nextPlayer + " wins trick.");
 			players[nextPlayer].score++;
 			updateScoreGraphics(nextPlayer);
-			if (config.winningScore == players[nextPlayer].score) {
-				removeActor(trumpsActor);
-				return Optional.of(nextPlayer);
-			}
+			if (config.winningScore == players[nextPlayer].score) return Optional.of(nextPlayer);
 		}
 		removeActor(trumpsActor);
 		return Optional.empty();
