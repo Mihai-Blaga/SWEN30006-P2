@@ -14,7 +14,7 @@ public class Player {
     private SingleResultFilter selector; 
 
     public Player(Deck deck) {
-        score= 0;
+        score = 0;
         hand = new Hand(deck);
     }
     

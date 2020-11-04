@@ -8,7 +8,7 @@ import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class Utils {
-    static final Random random = ThreadLocalRandom.current();
+    private static Random random = ThreadLocalRandom.current();
     // return random Enum value
 	public static <T extends Enum<?>> T randomEnum(Class<T> clazz){
         int x = random.nextInt(clazz.getEnumConstants().length);

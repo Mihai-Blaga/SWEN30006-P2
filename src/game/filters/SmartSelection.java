@@ -3,7 +3,7 @@ package game.filters;
 import ch.aplu.jcardgame.Card;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import game.Whist.Suit;
 import game.Whist.Rank;
@@ -17,41 +17,39 @@ public class SmartSelection extends SingleResultFilter {
     public SmartSelection(CardFilter f) {
         super(f);
     }
-
+    
     private static final double THRESHOLD = 0.8;
-    Hashtable<Card, Double> hashtable = new Hashtable<>();
+    HashMap<Card, Double> cardProbabilities = new HashMap<>();
 
     @Override
-    public Card select(ArrayList<Card> hand, Suit lead,
-                       Suit trump) {
+    public Card select(ArrayList<Card> hand, Suit lead,Suit trump) {
 
         // calculates the probabilities for each card in the hand
         calculateProbabilities(hand, lead, trump);
 
         Card bestCard = hand.get(0), minOverThreshold = hand.get(0);
-        for (Card card: hashtable.keySet()) {
+        for (Card card: cardProbabilities.keySet()) {
             //bestCard is important in case we don't find anything over Threshold
-            if (hashtable.get(card) > hashtable.get(bestCard))
+            if (cardProbabilities.get(card) > cardProbabilities.get(bestCard))
                 bestCard = card;
 
             // Prioritising saving of trump cards
             //TODO: Revisit the Prioritised saving of trump cards
-            if (hashtable.get(card) >= THRESHOLD &&
+            if (cardProbabilities.get(card) >= THRESHOLD &&
                     !rankGreater(card, minOverThreshold)) {
                 if (card.getSuit() != trump || card.getSuit() == minOverThreshold.getSuit())
                     minOverThreshold = card;
             }
         }
 
-        return (hashtable.get(minOverThreshold) >= THRESHOLD) ?
+        return (cardProbabilities.get(minOverThreshold) >= THRESHOLD) ?
                 minOverThreshold : bestCard;
     }
 
-    private void calculateProbabilities(ArrayList<Card> hand, Suit lead,
-                                                           Suit trump) {
-        hashtable.clear();
+    private void calculateProbabilities(ArrayList<Card> hand, Suit lead,Suit trump) {
+        cardProbabilities.clear();
         for (Card card: hand) {
-            hashtable.put(card, getProbabilities(hand, card, lead, trump));
+            cardProbabilities.put(card, getProbabilities(hand, card, lead, trump));
         }
     }
 
@@ -103,7 +101,7 @@ public class SmartSelection extends SingleResultFilter {
         }
         return numCardsGreater;
     }
-
+    //TODO:can this be moved to utils?
     private boolean contains(ArrayList<Card> hand, Rank rank, Suit suit) {
         for (Card card: hand)
             if (card.getRank() == rank && card.getSuit() == suit)
