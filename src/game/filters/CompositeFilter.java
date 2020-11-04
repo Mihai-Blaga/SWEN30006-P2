@@ -9,7 +9,7 @@ public class CompositeFilter implements CardFilter {
 
     private ArrayList<CardFilter> filters = new ArrayList<>();
 
-    public BaseFilter() {
+    public CompositeFilter() {
         this.filters.add(new NaiveIllegal());
     }
 
