@@ -12,6 +12,7 @@ public class PropertyLoader {
     public int winningScore;
     public boolean enforceRules;
     public int thinkingTime;
+    public boolean opponentVisible;
 
     public String[] playerLogic;
 
@@ -40,6 +41,7 @@ public class PropertyLoader {
         whistProperties.setProperty("winningScore", "24");
         whistProperties.setProperty("enforceRules", "false");
         whistProperties.setProperty("thinkingTime", "2000");
+        whistProperties.setProperty("opponentVisible", "false");
 
         // Read properties
         FileReader inStream = null;
@@ -91,6 +93,9 @@ public class PropertyLoader {
         for (int i = 0; i < nbPlayers; i++){
             playerLogic[i] = whistProperties.getProperty(String.format("player_%d", i + 1));
         }
+
+        opponentVisible = Boolean.parseBoolean(whistProperties.getProperty("opponentVisible"));
+        System.out.println("Can see opponents hand: " + opponentVisible);
 
         return whistProperties;
     }

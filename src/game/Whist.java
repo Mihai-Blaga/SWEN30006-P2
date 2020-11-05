@@ -218,8 +218,12 @@ public class Whist extends CardGame {
 			players[i].hand.draw();
 		}
 
-		//for (int i = 1; i < nbPlayers; i++)  // This code can be used to visually hide the cards in a hand (make them face down)
-		//players[i].hand.setVerso(true);
+		// This code can be used to visually hide the cards in a hand (make them face down)
+		if (!config.opponentVisible){
+			for (int i = 1; i < config.nbPlayers; i++){
+				players[i].hand.setVerso(true);
+			}
+		}
 		// End graphics
 	}
 
