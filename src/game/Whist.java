@@ -180,6 +180,7 @@ public class Whist extends CardGame {
 			//set the CardPicker of each player.
 			players[i].setStrategy(getStrategy(config.playerLogic[i]));
 			players[i].isHuman = config.playerLogic[i].contains("human");
+			System.out.printf("Player %d strategy: %s\n", i, config.playerLogic[i]);
 		}
 		initScore();
 		playGame();
