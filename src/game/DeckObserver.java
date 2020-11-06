@@ -7,6 +7,8 @@ import java.util.List;
 
 public class DeckObserver {
 
+    private static final int MAX_CARDS = 52;
+
     private List<Card> playedCards = new ArrayList<>();
     private List<Card> currentTrick = new ArrayList<>();
 
@@ -47,5 +49,9 @@ public class DeckObserver {
 
     public List<Card> getCurrentTrick() {
         return currentTrick;
+    }
+
+    public int cardsRemaining() {
+        return MAX_CARDS - playedCards.size() - currentTrick.size();
     }
 }

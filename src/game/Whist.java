@@ -39,6 +39,7 @@ public class Whist extends CardGame {
 	private final Deck deck = new Deck(Suit.values(), Rank.values(), "cover");
 	private Player[] players;
 	private static int numPlayers = 0;
+	private static int numInitCards = 0;
 	private static DeckObserver deckObserver;
 
 	private final Location[] handLocations = {
@@ -173,6 +174,7 @@ public class Whist extends CardGame {
 		setStatusText("Initializing...");
 		config = new PropertyLoader();
 		numPlayers = config.nbPlayers;
+		numInitCards = config.nbStartCards;
 		deckObserver  = DeckObserver.getDeckObserver();
 		players = new Player[config.nbPlayers];
 		for (int i = 0; i < config.nbPlayers; i++) {

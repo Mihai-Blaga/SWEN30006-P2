@@ -13,6 +13,7 @@ import game.DeckObserver;
 import static game.Utils.*;
 
 import org.apache.commons.math3.distribution.BinomialDistribution;
+import org.apache.commons.math3.distribution.HypergeometricDistribution;
 
 public class SmartSelection extends SingleResultFilter {
 
@@ -20,7 +21,8 @@ public class SmartSelection extends SingleResultFilter {
         super(f);
     }
     
-    private static final double UPPER_THRESHOLD = 0.8;
+    private static final double UPPER_THRESHOLD = 0.85;
+    private static final double LEAD_UPPER_THRESHOLD = 0.97;
     private static final double LOWER_THRESHOLD = 0.1;
 
     HashMap<Card, Double> cardProbabilities = new HashMap<>();
@@ -43,11 +45,11 @@ public class SmartSelection extends SingleResultFilter {
                     && card.getSuit() != trump)) {
                 worstCard = card;
             }
-            if (cardProbabilities.get(card) >= UPPER_THRESHOLD) {
-                if (card.getSuit() == trump && (cardProbabilities.get(minOverThreshold) < UPPER_THRESHOLD ||
+            if (cardProbabilities.get(card) >= getThreshold()) {
+                if (card.getSuit() == trump && (cardProbabilities.get(minOverThreshold) < getThreshold() ||
                         (minOverThreshold.getSuit() == trump && Utils.rankGreater(minOverThreshold, card))))
                     minOverThreshold = card;
-                else if (card.getSuit() != trump && (cardProbabilities.get(minOverThreshold) < UPPER_THRESHOLD ||
+                else if (card.getSuit() != trump && (cardProbabilities.get(minOverThreshold) < getThreshold() ||
                         Utils.rankGreater(minOverThreshold, card)))
                     minOverThreshold = card;
             }
@@ -55,7 +57,7 @@ public class SmartSelection extends SingleResultFilter {
         System.out.println(worstCard.toString() + " " + minOverThreshold.toString() + " " + bestCard.toString());
         if (cardProbabilities.get(bestCard) <= LOWER_THRESHOLD)
             return worstCard;
-        return (cardProbabilities.get(minOverThreshold) >= UPPER_THRESHOLD) ?
+        return (cardProbabilities.get(minOverThreshold) >= getThreshold()) ?
                 minOverThreshold : bestCard;
     }
 
@@ -73,18 +75,25 @@ public class SmartSelection extends SingleResultFilter {
         if (!(lead == null || card.getSuit() == lead || card.getSuit() == trump)) return 0;
         if (!canWin(card, trump)) return 0;
 
-        int numCards = 0;
+        int numCardsGreater = 0;
 
         // Add all cards that can beat current card
-        numCards += numCardsGreater(hand, card, (Suit) card.getSuit());
+        numCardsGreater += getNumCardsGreater(hand, card, (Suit) card.getSuit());
 
         if (card.getSuit() != trump) // Add all trump cards that can beat current card
-            numCards += numCardsGreater(hand, card, trump);
-        //Bi(numCards, (1 - (DeckObserver.getCurrentTrick().size() + 1)/ tot_players))
-        BinomialDistribution distribution = new BinomialDistribution(numCards,
-                1 - ((double)DeckObserver.getDeckObserver().getCurrentTrick().size()/(game.Whist.getNumPlayers()  - 1.0)));
+            numCardsGreater += getNumCardsGreater(hand, card, trump);
+
+//        BinomialDistribution distribution = new BinomialDistribution(numCardsGreater,
+//                1 - ((double)DeckObserver.getDeckObserver().getCurrentTrick().size()/
+//                        (game.Whist.getNumPlayers()  - 1.0)));
+
+        HypergeometricDistribution distribution = new HypergeometricDistribution(
+                DeckObserver.getDeckObserver().cardsRemaining() - hand.size(),
+                numCardsGreater, Whist.getNumPlayers() -
+                DeckObserver.getDeckObserver().getCurrentTrick().size() - 1);
+
        System.out.println(card.toString() + " " + distribution.cumulativeProbability(quantile) +  " "
-               + numCards + " "  + distribution.getProbabilityOfSuccess());
+               + numCardsGreater + " "  + distribution.getSampleSize());
         return distribution.cumulativeProbability(quantile);
     }
 
@@ -102,7 +111,7 @@ public class SmartSelection extends SingleResultFilter {
     }
     
     //TODO:Double check this logic, what is suit meant to represent? is it the trump suit?
-    private int numCardsGreater(ArrayList<Card> hand, Card card, Suit suit) {
+    private int getNumCardsGreater(ArrayList<Card> hand, Card card, Suit suit) {
         int numCardsGreater = 0;
         for (Rank rank: Rank.values()) {
             // Only iterate for ranks greater than you, unless trump...
@@ -121,5 +130,10 @@ public class SmartSelection extends SingleResultFilter {
             if (card.getRank() == rank && card.getSuit() == suit)
                 return true;
         return false;
+    }
+
+    private double getThreshold() {
+        return (DeckObserver.getDeckObserver().getCurrentTrick().size() == 0) ?
+                LEAD_UPPER_THRESHOLD : UPPER_THRESHOLD;
     }
 }
