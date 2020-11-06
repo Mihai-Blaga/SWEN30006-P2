@@ -50,12 +50,12 @@ public class PropertyLoader {
             String[] fileNames = {"whist", "legal", "smart"};
 
             //parsing through file and loading the file in priority with enable flag.
-            inStream = new FileReader(String.format("src/properties/%s.properties", fileNames[i++]));
+            inStream = new FileReader(String.format("%s.properties", fileNames[i++]));
             whistProperties.load(inStream);
 
             while (!Boolean.parseBoolean(whistProperties.getProperty("Enable"))){
                 inStream.close();
-                inStream = new FileReader(String.format("src/properties/%s.properties", fileNames[i++]));
+                inStream = new FileReader(String.format("%s.properties", fileNames[i++]));
                 whistProperties.load(inStream);
             }
 
