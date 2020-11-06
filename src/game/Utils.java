@@ -34,4 +34,18 @@ public final class Utils {
         }
         return(out);
     }
+
+
+    /**
+     * @param hand list of all cards in hand
+     * @param rank Rank of card in Question
+     * @param suit Suit of card in Question
+     * @return true in card in hand, else false
+     */
+    public static boolean contains(ArrayList<Card> hand, Whist.Rank rank, Whist.Suit suit) {
+        for (Card card: hand)
+            if (card.getRank() == rank && card.getSuit() == suit)
+                return true;
+        return false;
+    }
 }

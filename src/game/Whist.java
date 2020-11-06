@@ -73,8 +73,7 @@ public class Whist extends CardGame {
 	
 
 	private Card selected;
-	
-	//TODO abstract away some more of the code?
+
 	/**
 	 * plays a round
 	 * @return the Winner number if there is one
