@@ -230,6 +230,7 @@ public class Whist extends CardGame {
 	private void playGame() {
 		Optional<Integer> winner;
 		do { 
+			DeckObserver.getDeckObserver().newGame();
 			initRound();
 			winner = playRound();
 		} while (!winner.isPresent());
@@ -238,6 +239,7 @@ public class Whist extends CardGame {
 		setStatusText("Game over. Winner is player: " + winner.get());
 		refresh();
 	}
+
 	public static void main(String[] args)
 	{
     new Whist();

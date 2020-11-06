@@ -41,6 +41,10 @@ public class DeckObserver {
         return false;
     }
 
+    public void newGame() {
+        playedCards.clear();
+    }
+
     public List<Card> getCurrentTrick() {
         return currentTrick;
     }

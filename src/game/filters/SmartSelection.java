@@ -5,6 +5,8 @@ import ch.aplu.jcardgame.Card;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import game.Utils;
+import game.Whist;
 import game.Whist.Suit;
 import game.Whist.Rank;
 import game.DeckObserver;
@@ -18,7 +20,9 @@ public class SmartSelection extends SingleResultFilter {
         super(f);
     }
     
-    private static final double THRESHOLD = 0.8;
+    private static final double UPPER_THRESHOLD = 0.8;
+    private static final double LOWER_THRESHOLD = 0.1;
+
     HashMap<Card, Double> cardProbabilities = new HashMap<>();
 
     @Override
@@ -27,33 +31,43 @@ public class SmartSelection extends SingleResultFilter {
         // calculates the probabilities for each card in the hand
         calculateProbabilities(hand, lead, trump);
 
-        Card bestCard = hand.get(0), minOverThreshold = hand.get(0);
+        Card bestCard = hand.get(0), worstCard = hand.get(0), minOverThreshold = hand.get(0);
         for (Card card: cardProbabilities.keySet()) {
             //bestCard is important in case we don't find anything over Threshold
-            if (cardProbabilities.get(card) > cardProbabilities.get(bestCard))
-                bestCard = card;
-
-            // Prioritising saving of trump cards
-            //TODO: Revisit the Prioritised saving of trump cards
-            if (cardProbabilities.get(card) >= THRESHOLD &&
-                    !rankGreater(card, minOverThreshold)) {
-                if (card.getSuit() != trump || card.getSuit() == minOverThreshold.getSuit())
+            if (cardProbabilities.get(card) >= cardProbabilities.get(bestCard)) {
+                if (cardProbabilities.get(card) > cardProbabilities.get(bestCard)
+                        || rankGreater(bestCard, card))
+                    bestCard = card;
+            }
+            if (worstCard.getSuit() == trump || (Utils.rankGreater(worstCard, card)
+                    && card.getSuit() != trump)) {
+                worstCard = card;
+            }
+            if (cardProbabilities.get(card) >= UPPER_THRESHOLD) {
+                if (card.getSuit() == trump && (cardProbabilities.get(minOverThreshold) < UPPER_THRESHOLD ||
+                        (minOverThreshold.getSuit() == trump && Utils.rankGreater(minOverThreshold, card))))
+                    minOverThreshold = card;
+                else if (card.getSuit() != trump && (cardProbabilities.get(minOverThreshold) < UPPER_THRESHOLD ||
+                        Utils.rankGreater(minOverThreshold, card)))
                     minOverThreshold = card;
             }
         }
-
-        return (cardProbabilities.get(minOverThreshold) >= THRESHOLD) ?
+        System.out.println(worstCard.toString() + " " + minOverThreshold.toString() + " " + bestCard.toString());
+        if (cardProbabilities.get(bestCard) <= LOWER_THRESHOLD)
+            return worstCard;
+        return (cardProbabilities.get(minOverThreshold) >= UPPER_THRESHOLD) ?
                 minOverThreshold : bestCard;
     }
 
     private void calculateProbabilities(ArrayList<Card> hand, Suit lead,Suit trump) {
         cardProbabilities.clear();
         for (Card card: hand) {
-            cardProbabilities.put(card, getProbabilities(hand, card, lead, trump));
+            cardProbabilities.put(card, getProbabilities(hand, card, lead, trump,
+                    (DeckObserver.getDeckObserver().getCurrentTrick().size() == 0) ? 1 : 0));
         }
     }
 
-    private double getProbabilities(ArrayList<Card> hand, Card card, Suit lead, Suit trump) {
+    private double getProbabilities(ArrayList<Card> hand, Card card, Suit lead, Suit trump, int quantile) {
 
         
         if (!(lead == null || card.getSuit() == lead || card.getSuit() == trump)) return 0;
@@ -69,9 +83,9 @@ public class SmartSelection extends SingleResultFilter {
         //Bi(numCards, (1 - (DeckObserver.getCurrentTrick().size() + 1)/ tot_players))
         BinomialDistribution distribution = new BinomialDistribution(numCards,
                 1 - ((double)DeckObserver.getDeckObserver().getCurrentTrick().size()/(game.Whist.getNumPlayers()  - 1.0)));
-       System.out.println(card.toString() + " " + distribution.cumulativeProbability(0) +  " "
+       System.out.println(card.toString() + " " + distribution.cumulativeProbability(quantile) +  " "
                + numCards + " "  + distribution.getProbabilityOfSuccess());
-        return distribution.cumulativeProbability(0);
+        return distribution.cumulativeProbability(quantile);
     }
 
     private boolean canWin(Card card, Suit trump) {
