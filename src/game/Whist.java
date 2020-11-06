@@ -242,12 +242,11 @@ public class Whist extends CardGame {
 		refresh();
 	}
 
-	public static void main(String[] args)
-	{
-    new Whist();
+	public static void main(String[] args) {
+    	new Whist();
 	}
 
-	public static int getNumPlayers(){
+	public static int getNumPlayers() {
 		return numPlayers;
 	}
 }

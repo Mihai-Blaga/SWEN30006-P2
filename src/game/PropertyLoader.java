@@ -7,11 +7,10 @@ import java.util.Properties;
 public class PropertyLoader {
     public int seed;
     public int nbPlayers;
-    
     public int nbStartCards;
     public int winningScore;
-    public boolean enforceRules;
     public int thinkingTime;
+    public boolean enforceRules;
     public boolean opponentVisible;
 
     public String[] playerLogic;

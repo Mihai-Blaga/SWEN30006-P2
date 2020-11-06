@@ -21,8 +21,8 @@ public class SmartSelection extends SingleResultFilter {
         super(f);
     }
     
-    private static final double UPPER_THRESHOLD = 0.85;
     private static final double LEAD_UPPER_THRESHOLD = 0.97;
+    private static final double UPPER_THRESHOLD = 0.85;
     private static final double LOWER_THRESHOLD = 0.1;
 
     HashMap<Card, Double> cardProbabilities = new HashMap<>();
