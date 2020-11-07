@@ -20,7 +20,6 @@ public class CompositeFilter implements CardFilter {
     @Override
     public ArrayList<Card> filter(ArrayList<Card> hand, Suit lead, Suit trump) {
         ArrayList<Card> temp;
-        // TODO: Importance of order of Filtering
         for (CardFilter cardFilter: filters) {
             hand = ((temp = cardFilter.filter(hand, lead, trump)).size() > 0) ?
                     temp : hand;

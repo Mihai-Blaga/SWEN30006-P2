@@ -22,7 +22,7 @@ public class Player {
         return selector.select(hand.getCardList(), lead, trump);
     }
 
-    public void setStrategy(SingleResultFilter strat){
-        selector = strat;
+    public void setStrategy(SingleResultFilter strategy){
+        selector = strategy;
     }
 }
